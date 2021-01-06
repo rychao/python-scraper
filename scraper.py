@@ -1,6 +1,7 @@
 from selenium import webdriver
 #import chromedriver_binary  # Adds chromedriver binary to path
 
+#hello world
 driver = webdriver.Chrome(executable_path=r"/usr/local/bin/chromedriver")
 url = "https://kith.com/collections/kith/products/kh2603-102"
 driver.get(url)
