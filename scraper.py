@@ -3,13 +3,14 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 import json
+import string
 
 class Scraper(object):
 
     global driver # webdriver crashes, changing to global seems to fix
     driver = webdriver.Chrome()
 
-    def __init__(self, url, size, email, firstName, lastName, address, city, zip, phone):
+    def __init__(self, url, size, email, firstName, lastName, address, city, zip, phone, cardNum, cardName, cardExp, ccv):
         self.url = url
         self.size = size
         self.email = email
@@ -19,7 +20,10 @@ class Scraper(object):
         self.city = city
         self.zip = zip
         self.phone = phone
-
+        self.cardNum = cardNum
+        self.cardName = cardName
+        self.cardExp = cardExp
+        self.ccv = ccv
 
     def scrape_init(self):
 
@@ -37,14 +41,16 @@ class Scraper(object):
         city = self.city
         zip = self.zip
         phone = self.phone
-        cardNum1 = "4444"
-        cardNum2 = "5555"
-        cardNum3 = "6666"
-        cardNum4 = "7777"
-        cardName = "john smith"
-        cardExp1 = "7" #07/21
-        cardExp2 = "21"
-        ccv = "666"
+        cardNum = self.cardNum.split()
+        cardNum0 = cardNum[0]
+        cardNum1 = cardNum[1]
+        cardNum2 = cardNum[2]
+        cardNum3 = cardNum[3]
+        cardName = self.cardName
+        cardExp = self.cardExp.split()
+        cardExp0 = cardExp[0]
+        cardExp1 = cardExp[1]
+        ccv = self.ccv
 
         # CLOTHING SIZE
         if size == 'S':
@@ -128,8 +134,6 @@ class Scraper(object):
             driver.find_element_by_xpath('//div[@data-value="46" and @class="swatch-element 46"]').click()
 
 
-
-
         driver.find_element_by_name('add').click()
         #Takes a moment to add to cart, buffer for 5sec
         driver.implicitly_wait(5)
@@ -155,21 +159,22 @@ class Scraper(object):
         iframe = driver.find_element_by_class_name('card-fields-iframe')
         driver.switch_to.frame(iframe)
 
-        #driver.find_element_by_name('number').send_keys(cardNum1, cardNum2, cardNum3, cardNum4, Keys.TAB, cardName, Keys.TAB, cardExp1, cardExp2, Keys.TAB, ccv)
+        #driver.find_element_by_name('number').send_keys(cardNum0, cardNum1, cardNum2, cardNum3, Keys.TAB, cardName, Keys.TAB, cardExp0, cardExp1, Keys.TAB, ccv)
 
         cardPayment = driver.find_element_by_name('number')
+        cardPayment.send_keys(cardNum0)
         cardPayment.send_keys(cardNum1)
         cardPayment.send_keys(cardNum2)
         cardPayment.send_keys(cardNum3)
-        cardPayment.send_keys(cardNum4, Keys.TAB)
-        cardPayment.send_keys(cardName, Keys.TAB)
-        cardPayment.send_keys(cardExp1, Keys.TAB)
-        cardPayment.send_keys(cardExp2)
 
-        #driver.find_element_by_name('name').send_keys(cardName)
+        # cardPayment.send_keys(cardName)
+        # cardPayment.send_keys(cardExp0)
+        # cardPayment.send_keys(cardExp1)
 
-        #driver.find_element_by_name('expiry').send_keys(cardExp)
-        #driver.find_element_by_name('verification_value').send_keys(ccv)
+        driver.find_element_by_name('name').send_keys(cardName)
+        driver.find_element_by_name('expiry').send_keys(cardExp0)
+        driver.find_element_by_name('expiry').send_keys(cardExp1)
+        driver.find_element_by_name('verification_value').send_keys(ccv)
 
 
 def main():
@@ -184,9 +189,13 @@ def main():
     city = (elements['city'])
     zip = (elements['zip'])
     phone = (elements['phone'])
+    cardNum = (elements['card number'])
+    cardName = (elements['card name'])
+    cardExp = (elements['card expiry'])
+    ccv = (elements['ccv'])
     #print(phone)
 
-    test = Scraper(url, size, email,firstName,lastName,address,city,zip,phone)
+    test = Scraper(url, size, email, firstName, lastName, address, city, zip, phone, cardNum, cardName, cardExp, ccv)
     test.scrape_init()
 
 if __name__ == "__main__":
