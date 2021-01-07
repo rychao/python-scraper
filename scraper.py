@@ -5,8 +5,13 @@ from selenium.webdriver.common.keys import Keys
 import json
 
 class Scraper(object):
-    def __init__(self, url, email, firstName, lastName, address, city, zip, phone):
+
+    global driver # webdriver crashes, changing to global seems to fix
+    driver = webdriver.Chrome()
+
+    def __init__(self, url, size, email, firstName, lastName, address, city, zip, phone):
         self.url = url
+        self.size = size
         self.email = email
         self.firstName = firstName
         self.lastName = lastName
@@ -18,13 +23,12 @@ class Scraper(object):
 
     def scrape_init(self):
 
-        driver = webdriver.Chrome(executable_path=r"/usr/local/bin/chromedriver")
+        #driver = webdriver.Chrome(executable_path=r"/usr/local/bin/chromedriver")
         url = self.url
-        #url = "https://kith.com/collections/kith/products/kh9588-101"
-        #url = input('URL: ')
-        size = input("Size: ")
+        size = self.size
+        #size = input("Size: ")
+        print("Requested Size: ", size)
         driver.get(url)
-
 
         email = self.email
         firstName = self.firstName
@@ -38,7 +42,8 @@ class Scraper(object):
         cardNum3 = "6666"
         cardNum4 = "7777"
         cardName = "john smith"
-        cardExp = "721" #07/21
+        cardExp1 = "7" #07/21
+        cardExp2 = "21"
         ccv = "666"
 
 
@@ -74,14 +79,19 @@ class Scraper(object):
         driver.find_element_by_name('button').click()
 
         driver.implicitly_wait(60)
-        # driver.find_element_by_id('number').send_keys(creditCardNum)
         iframe = driver.find_element_by_class_name('card-fields-iframe')
         driver.switch_to.frame(iframe)
-        driver.find_element_by_name('number').send_keys(cardNum1)
-        driver.find_element_by_name('number').send_keys(cardNum2)
-        driver.find_element_by_name('number').send_keys(cardNum3)
-        driver.find_element_by_name('number').send_keys(cardNum4)
-        driver.find_element_by_name('number').send_keys(Keys.TAB)
+
+        #driver.find_element_by_name('number').send_keys(cardNum1, cardNum2, cardNum3, cardNum4, Keys.TAB, cardName, Keys.TAB, cardExp1, cardExp2, Keys.TAB, ccv)
+
+        cardPayment = driver.find_element_by_name('number')
+        cardPayment.send_keys(cardNum1)
+        cardPayment.send_keys(cardNum2)
+        cardPayment.send_keys(cardNum3)
+        cardPayment.send_keys(cardNum4, Keys.TAB)
+        cardPayment.send_keys(cardName, Keys.TAB)
+        cardPayment.send_keys(cardExp1, Keys.TAB)
+        cardPayment.send_keys(cardExp2)
 
         #driver.find_element_by_name('name').send_keys(cardName)
 
@@ -93,6 +103,7 @@ def main():
     file = open('file.json')
     elements = json.loads(file.read())
     url = (elements['url'])
+    size = (elements['size'])
     email = (elements['email'])
     firstName = (elements['firstName'])
     lastName = (elements['lastName'])
@@ -102,7 +113,7 @@ def main():
     phone = (elements['phone'])
     #print(phone)
 
-    test = Scraper(url, email,firstName,lastName,address,city,zip,phone)
+    test = Scraper(url, size, email,firstName,lastName,address,city,zip,phone)
     test.scrape_init()
 
 if __name__ == "__main__":
