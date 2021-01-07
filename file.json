@@ -1,9 +1,10 @@
 {
-   "email" : "johnsmith@gmail.com",
-   "firstName" : "John",
-   "lastName" : "Smith",
-   "address" : "8888 Kith Avenue",
-   "city" : "Night City",
-   "zip" : "88888",
-   "phone" : "5556667777"
+  "url" : "https://kith.com/collections/kith/products/kh9588-101",
+  "email" : "johnsmith@gmail.com",
+  "firstName" : "John",
+  "lastName" : "Smith",
+  "address" : "8888 Kith Avenue",
+  "city" : "Night City",
+  "zip" : "88888",
+  "phone" : "5556667777"
  }

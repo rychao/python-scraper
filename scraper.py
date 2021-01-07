@@ -1,10 +1,12 @@
 from selenium import webdriver
 #import chromedriver_binary  # Adds chromedriver binary to path
+from selenium.webdriver.common.keys import Keys
 
 import json
 
 class Scraper(object):
-    def __init__(self, email, firstName, lastName, address, city, zip, phone):
+    def __init__(self, url, email, firstName, lastName, address, city, zip, phone):
+        self.url = url
         self.email = email
         self.firstName = firstName
         self.lastName = lastName
@@ -17,10 +19,12 @@ class Scraper(object):
     def scrape_init(self):
 
         driver = webdriver.Chrome(executable_path=r"/usr/local/bin/chromedriver")
+        url = self.url
         #url = "https://kith.com/collections/kith/products/kh9588-101"
-        url = input('URL: ')
+        #url = input('URL: ')
         size = input("Size: ")
         driver.get(url)
+
 
         email = self.email
         firstName = self.firstName
@@ -52,6 +56,7 @@ class Scraper(object):
         #Takes a moment to add to cart, buffer for 5sec
         driver.implicitly_wait(5)
         driver.find_element_by_name('checkout').click()
+        driver.implicitly_wait(60) #waits up to 60s if queue
 
         #emailInput = driver.find_element_by_xpath('//*[@id="checkout_email"]')
         emailInput = driver.find_element_by_id('checkout_email')
@@ -76,16 +81,18 @@ class Scraper(object):
         driver.find_element_by_name('number').send_keys(cardNum2)
         driver.find_element_by_name('number').send_keys(cardNum3)
         driver.find_element_by_name('number').send_keys(cardNum4)
+        driver.find_element_by_name('number').send_keys(Keys.TAB)
 
-        driver.switch_to,default_content()
-        driver.find_element_by_name('name').send_keys(cardName)
-        driver.find_element_by_name('expiry').send_keys(cardExp)
-        driver.find_element_by_name('verification_value').send_keys(ccv)
+        #driver.find_element_by_name('name').send_keys(cardName)
+
+        #driver.find_element_by_name('expiry').send_keys(cardExp)
+        #driver.find_element_by_name('verification_value').send_keys(ccv)
 
 
 def main():
     file = open('file.json')
     elements = json.loads(file.read())
+    url = (elements['url'])
     email = (elements['email'])
     firstName = (elements['firstName'])
     lastName = (elements['lastName'])
@@ -93,9 +100,9 @@ def main():
     city = (elements['city'])
     zip = (elements['zip'])
     phone = (elements['phone'])
-    #print(email)
+    #print(phone)
 
-    test = Scraper(email,firstName,lastName,address,city,zip,phone)
+    test = Scraper(url, email,firstName,lastName,address,city,zip,phone)
     test.scrape_init()
 
 if __name__ == "__main__":
