@@ -54,7 +54,7 @@ class Scraper(object):
         if '.5' in size:         # SHOE SIZES (Mens US 3-15, EU 36-46)
             driver.find_element_by_xpath('//div[@data-value="{}" and @class="swatch-element {}"]'.format(size, size.replace(".5", "-5"))).click()
         else:
-            driver.find_element_by_xpath('//div[@data-value="{}" and @class="swatch-element {}"]'.format(size, size)).click()
+            driver.find_element_by_xpath('//div[@data-value="{}" and @class="swatch-element {}"]'.format(size, size.lower())).click()
 
         driver.find_element_by_name('add').click()
         driver.implicitly_wait(5) # wait for cart button
@@ -82,20 +82,14 @@ class Scraper(object):
         #driver.find_element_by_name('number').send_keys(cardNum0, cardNum1, cardNum2, cardNum3, Keys.TAB, cardName, Keys.TAB, cardExp0, cardExp1, Keys.TAB, ccv)
 
         cardPayment = driver.find_element_by_name('number')
-        cardPayment.send_keys(cardNum0)
+        cardPayment.send_keys(cardNum0) # w/o splitting, returns '4447'
         cardPayment.send_keys(cardNum1)
         cardPayment.send_keys(cardNum2)
         cardPayment.send_keys(cardNum3)
 
-        # cardPayment.send_keys(cardName)
-        # cardPayment.send_keys(cardExp0)
-        # cardPayment.send_keys(cardExp1)
-
-        driver.find_element_by_name('name').send_keys(cardName)
-        driver.find_element_by_name('expiry').send_keys(cardExp0)
-        driver.find_element_by_name('expiry').send_keys(cardExp1)
-        driver.find_element_by_name('verification_value').send_keys(ccv)
-
+        #driver.find_element_by_name('expiry').send_keys(cardExp0)
+        #driver.find_element_by_name('expiry').send_keys(cardExp1)
+        #driver.find_element_by_name('verification_value').send_keys(ccv)
 
 def main():
     file = open('file.json')
