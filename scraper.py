@@ -3,6 +3,10 @@ from selenium.webdriver.common.keys import Keys
 import json
 import string
 
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
+
 class Scraper(object):
     global driver # webdriver crashes, changing to global seems to fix
     driver = webdriver.Chrome()
@@ -57,7 +61,7 @@ class Scraper(object):
             driver.find_element_by_xpath('//div[@data-value="{}" and @class="swatch-element {}"]'.format(size, size.lower())).click()
 
         driver.find_element_by_name('add').click()
-        driver.implicitly_wait(5) # wait for cart button
+        driver.implicitly_wait(60) # wait for cart button
         driver.find_element_by_name('checkout').click()
         driver.implicitly_wait(60) # wait 1 min in case of QUEUE
 
@@ -76,10 +80,8 @@ class Scraper(object):
         driver.find_element_by_name('button').click()
 
         driver.implicitly_wait(60)
-        iframe = driver.find_element_by_class_name('card-fields-iframe')
+        iframe = driver.find_element_by_class_name('card-fields-iframe') #cardNumber iframe
         driver.switch_to.frame(iframe)
-
-        #driver.find_element_by_name('number').send_keys(cardNum0, cardNum1, cardNum2, cardNum3, Keys.TAB, cardName, Keys.TAB, cardExp0, cardExp1, Keys.TAB, ccv)
 
         cardPayment = driver.find_element_by_name('number')
         cardPayment.send_keys(cardNum0) # w/o splitting, returns '4447'
@@ -87,9 +89,21 @@ class Scraper(object):
         cardPayment.send_keys(cardNum2)
         cardPayment.send_keys(cardNum3)
 
-        #driver.find_element_by_name('expiry').send_keys(cardExp0)
-        #driver.find_element_by_name('expiry').send_keys(cardExp1)
-        #driver.find_element_by_name('verification_value').send_keys(ccv)
+        driver.switch_to_default_content() #resets iframe, may not be necessary
+        iframe2 = driver.find_element_by_xpath('//iframe[contains(@id, "card-fields-name")]') #card name iframe
+        driver.switch_to.frame(iframe2)
+        driver.find_element_by_xpath('//input[@id="name"]').send_keys(cardName)
+
+        driver.switch_to_default_content()
+        iframe3 = driver.find_element_by_xpath('//iframe[contains(@id, "card-fields-expiry")]')
+        driver.switch_to.frame(iframe3)
+        driver.find_element_by_xpath('//input[@id="expiry"]').send_keys(cardExp0)
+        driver.find_element_by_xpath('//input[@id="expiry"]').send_keys(cardExp1)
+
+        driver.switch_to_default_content()
+        iframe4 = driver.find_element_by_xpath('//iframe[contains(@id, "card-fields-verification_value")]')
+        driver.switch_to.frame(iframe4)
+        driver.find_element_by_xpath('//input[@id="verification_value"]').send_keys(ccv)
 
 def main():
     file = open('file.json')
