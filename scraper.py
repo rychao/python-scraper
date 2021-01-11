@@ -42,18 +42,12 @@ class Scraper(object):
         zip = self.zip
         phone = self.phone
         cardNum = self.cardNum.split()
-        cardNum0 = cardNum[0]
-        cardNum1 = cardNum[1]
-        cardNum2 = cardNum[2]
-        cardNum3 = cardNum[3]
         cardName = self.cardName
         cardExp = self.cardExp.split()
-        cardExp0 = cardExp[0]
-        cardExp1 = cardExp[1]
         ccv = self.ccv
 
-        if size == 'S' or size == 'M' or size == 'L' or size == "XL":         # CLOTHING SIZE (missing XS)
-            driver.find_element_by_xpath('//div[@data-value="{}" and @class="swatch-element {}"]'.format(size, size.lower())).click()
+        # if size == 'S' or size == 'M' or size == 'L' or size == "XL":         # CLOTHING SIZE (missing XS)
+        #     driver.find_element_by_xpath('//div[@data-value="{}" and @class="swatch-element {}"]'.format(size, size.lower())).click()
 
         if '.5' in size:         # SHOE SIZES (Mens US 3-15, EU 36-46)
             driver.find_element_by_xpath('//div[@data-value="{}" and @class="swatch-element {}"]'.format(size, size.replace(".5", "-5"))).click()
@@ -83,13 +77,12 @@ class Scraper(object):
         iframe = driver.find_element_by_class_name('card-fields-iframe') #cardNumber iframe
         driver.switch_to.frame(iframe)
 
-        cardPayment = driver.find_element_by_name('number')
-        cardPayment.send_keys(cardNum0) # w/o splitting, returns '4447'
-        cardPayment.send_keys(cardNum1)
-        cardPayment.send_keys(cardNum2)
-        cardPayment.send_keys(cardNum3)
+        driver.find_element_by_name('number').send_keys(cardNum[0]) # w/o splitting, returns '4447'
+        driver.find_element_by_name('number').send_keys(cardNum[1])
+        driver.find_element_by_name('number').send_keys(cardNum[2])
+        driver.find_element_by_name('number').send_keys(cardNum[3])
 
-        driver.switch_to_default_content() #resets iframe, may not be necessary
+        driver.switch_to_default_content() #resets iframe
         iframe2 = driver.find_element_by_xpath('//iframe[contains(@id, "card-fields-name")]') #card name iframe
         driver.switch_to.frame(iframe2)
         driver.find_element_by_xpath('//input[@id="name"]').send_keys(cardName)
@@ -97,13 +90,17 @@ class Scraper(object):
         driver.switch_to_default_content()
         iframe3 = driver.find_element_by_xpath('//iframe[contains(@id, "card-fields-expiry")]')
         driver.switch_to.frame(iframe3)
-        driver.find_element_by_xpath('//input[@id="expiry"]').send_keys(cardExp0)
-        driver.find_element_by_xpath('//input[@id="expiry"]').send_keys(cardExp1)
+        driver.find_element_by_xpath('//input[@id="expiry"]').send_keys(cardExp[0])
+        driver.find_element_by_xpath('//input[@id="expiry"]').send_keys(cardExp[1])
 
         driver.switch_to_default_content()
         iframe4 = driver.find_element_by_xpath('//iframe[contains(@id, "card-fields-verification_value")]')
         driver.switch_to.frame(iframe4)
         driver.find_element_by_xpath('//input[@id="verification_value"]').send_keys(ccv)
+
+        driver.switch_to_default_content()
+        driver.find_element_by_id('continue_button').click()
+
 
 def main():
     file = open('file.json')
