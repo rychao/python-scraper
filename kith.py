@@ -3,10 +3,6 @@ from selenium.webdriver.common.keys import Keys
 import json
 import string
 
-# from selenium.webdriver.common.by import By
-# from selenium.webdriver.support.ui import WebDriverWait
-# from selenium.webdriver.support import expected_conditions as EC
-
 class Scraper(object):
     global driver # webdriver crashes, changing to global seems to fix
     driver = webdriver.Chrome()
@@ -45,9 +41,6 @@ class Scraper(object):
         cardName = self.cardName
         cardExp = self.cardExp.split()
         ccv = self.ccv
-
-        # if size == 'S' or size == 'M' or size == 'L' or size == "XL":         # CLOTHING SIZE (missing XS)
-        #     driver.find_element_by_xpath('//div[@data-value="{}" and @class="swatch-element {}"]'.format(size, size.lower())).click()
 
         if '.5' in size:         # SHOE SIZES (Mens US 3-15, EU 36-46)
             driver.find_element_by_xpath('//div[@data-value="{}" and @class="swatch-element {}"]'.format(size, size.replace(".5", "-5"))).click()
@@ -100,7 +93,6 @@ class Scraper(object):
 
         driver.switch_to_default_content()
         driver.find_element_by_id('continue_button').click()
-
 
 def main():
     file = open('file.json')
