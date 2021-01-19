@@ -7,9 +7,12 @@ This script (Python 3) uses Selenium with Google Chrome to automate carting and 
 - Selenium driver for appropriate browser version
   - [Chrome Drivers](https://sites.google.com/a/chromium.org/chromedriver/downloads)
 - Link to specific product on [Kith](kith.com)
+- Specified size
+  - SHOES: Mens US 3-15, EU 36-46 (includes .5 sizes)
+  - CLOTHING: XS - XL
 
 ## Usage
-The checkout information (contact, shipping, credit card information, etc.) is supplied to the script via [file.json](https://github.com/rychao/python-scraper/blob/main/file.json):
+   The product and checkout information (contact, shipping, credit card information, etc.) is supplied to the script via [file.json](https://github.com/rychao/python-scraper/blob/main/file.json):
 
 ```
 {
