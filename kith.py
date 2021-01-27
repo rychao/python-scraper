@@ -69,7 +69,7 @@ class Scraper(object):
         f.write("{} | Successfully inputted all contact information.\n".format(str(datetime.datetime.now()).split('.')[0]))
 
         # shipping button
-        driver.find_element_by_name('button').click()
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.NAME, 'button'))).click()
         f.write("{} | Successfully submitted shipping page.\n".format(str(datetime.datetime.now()).split('.')[0]))
 
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'continue_button')))
