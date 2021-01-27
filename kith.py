@@ -3,6 +3,7 @@ from selenium.webdriver.common.keys import Keys
 import json
 import string
 import sys
+import datetime
 
 class Scraper(object):
     global driver # webdriver crashes, changing to global seems to fix
@@ -48,10 +49,10 @@ class Scraper(object):
         f = open("status.txt", "w+")
         driver.find_element_by_name('add').click()
         product = driver.find_element_by_class_name('product-single__title').text
-        f.write("Added \'{}\' size {} to cart.\n".format(product, size))
+        f.write("{} | Added \'{}\' size {} to cart.\n".format(str(datetime.datetime.now()).split('.')[0], product, size))
         driver.implicitly_wait(60) # wait for cart button
         driver.find_element_by_name('checkout').click()
-        f.write("Successfully retrieved contact information page.\n")
+        f.write("{} | Successfully retrieved contact information page.\n".format(str(datetime.datetime.now()).split('.')[0]))
         driver.implicitly_wait(60) # wait 1 min in case of QUEUE
 
         emailInput = driver.find_element_by_id('checkout_email')
@@ -64,11 +65,11 @@ class Scraper(object):
         driver.find_element_by_id('checkout_shipping_address_zip').send_keys(zip)
         driver.find_element_by_id('checkout_shipping_address_phone').send_keys(phone)
         driver.find_element_by_name('button').click()
-        f.write("Successfully inputted all contact information.\n")
+        f.write("{} | Successfully inputted all contact information.\n".format(str(datetime.datetime.now()).split('.')[0]))
 
         #shipping button
         driver.find_element_by_name('button').click()
-        f.write("Successfully submitted shipping page.\n")
+        f.write("{} | Successfully submitted shipping page.\n".format(str(datetime.datetime.now()).split('.')[0]))
 
         driver.implicitly_wait(60)
         iframe = driver.find_element_by_class_name('card-fields-iframe') #cardNumber iframe
@@ -79,26 +80,26 @@ class Scraper(object):
         driver.find_element_by_name('number').send_keys(cardNum[2])
         driver.find_element_by_name('number').send_keys(cardNum[3])
 
-        driver.switch_to_default_content() #resets iframe
+        driver.switch_to.default_content() #resets iframe
         iframe2 = driver.find_element_by_xpath('//iframe[contains(@id, "card-fields-name")]') #card name iframe
         driver.switch_to.frame(iframe2)
         driver.find_element_by_xpath('//input[@id="name"]').send_keys(cardName)
 
-        driver.switch_to_default_content()
+        driver.switch_to.default_content()
         iframe3 = driver.find_element_by_xpath('//iframe[contains(@id, "card-fields-expiry")]')
         driver.switch_to.frame(iframe3)
         driver.find_element_by_xpath('//input[@id="expiry"]').send_keys(cardExp[0])
         driver.find_element_by_xpath('//input[@id="expiry"]').send_keys(cardExp[1])
 
-        driver.switch_to_default_content()
+        driver.switch_to.default_content()
         iframe4 = driver.find_element_by_xpath('//iframe[contains(@id, "card-fields-verification_value")]')
         driver.switch_to.frame(iframe4)
         driver.find_element_by_xpath('//input[@id="verification_value"]').send_keys(ccv)
-        f.write("Successfully filled out payment information.\n")
+        f.write("{} | Successfully filled out payment information.\n".format(str(datetime.datetime.now()).split('.')[0]))
 
-        driver.switch_to_default_content()
+        driver.switch_to.default_content()
         driver.find_element_by_id('continue_button').click()
-        f.write("Finalized checkout and submitted \'pay now\' button.\n")
+        f.write("{} | Finalized checkout and submitted \'pay now\' button.\n".format(str(datetime.datetime.now()).split('.')[0]))
 
 def main():
     file = open(sys.argv[1])
