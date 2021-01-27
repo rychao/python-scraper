@@ -17,7 +17,6 @@ This script (Python 3) uses Selenium with Google Chrome to automate carting and 
 ```
 {
   "url" : "https://website.com",
-  "size" : "L",
   "email" : "johnsmith@gmail.com",
   "firstName" : "John",
   "lastName" : "Smith",
@@ -33,3 +32,10 @@ This script (Python 3) uses Selenium with Google Chrome to automate carting and 
  ```
 
  After downloading locally, fill in the link of the desired product and your checkout information. When file.json is configured, kith.py will open an instance of Chrome an automatically cart and checkout the product.
+
+ Once navigating to the proper directory, you will have to input the corresponding json file AND size (see example) as system arguments.
+
+ EXAMPLE:
+ ```
+ python3 kith.py file.json XL
+ ```
