@@ -2,14 +2,14 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import json
 import string
+import sys
 
 class Scraper(object):
     global driver # webdriver crashes, changing to global seems to fix
     driver = webdriver.Chrome()
-
-    def __init__(self, url, size, email, firstName, lastName, address, city, zip, phone, cardNum, cardName, cardExp, ccv):
+    
+    def __init__(self, url, email, firstName, lastName, address, city, zip, phone, cardNum, cardName, cardExp, ccv):
         self.url = url
-        self.size = size
         self.email = email
         self.firstName = firstName
         self.lastName = lastName
@@ -23,10 +23,8 @@ class Scraper(object):
         self.ccv = ccv
 
     def scrape_init(self):
-        #kith US SHOE: https://kith.com/collections/mens-footwear/products/vn0a4uud1mk
-        #kith gloves: https://kith.com/collections/kith/products/kh9588-101
         url = self.url
-        size = self.size
+        size = sys.argv[2]
         print("Requested Size: ", size)
         driver.get(url)
 
@@ -47,9 +45,12 @@ class Scraper(object):
         else:
             driver.find_element_by_xpath('//div[@data-value="{}" and @class="swatch-element {}"]'.format(size, size.lower())).click()
 
+        f = open("status.txt", "w+")
         driver.find_element_by_name('add').click()
+        f.write("added to size {} cart.\n".format(size))
         driver.implicitly_wait(60) # wait for cart button
         driver.find_element_by_name('checkout').click()
+        f.write("made it to contact page.\n")
         driver.implicitly_wait(60) # wait 1 min in case of QUEUE
 
         emailInput = driver.find_element_by_id('checkout_email')
@@ -62,6 +63,7 @@ class Scraper(object):
         driver.find_element_by_id('checkout_shipping_address_zip').send_keys(zip)
         driver.find_element_by_id('checkout_shipping_address_phone').send_keys(phone)
         driver.find_element_by_name('button').click()
+        f.write("filled contact info.\n")
 
         #shipping button
         driver.find_element_by_name('button').click()
@@ -90,15 +92,16 @@ class Scraper(object):
         iframe4 = driver.find_element_by_xpath('//iframe[contains(@id, "card-fields-verification_value")]')
         driver.switch_to.frame(iframe4)
         driver.find_element_by_xpath('//input[@id="verification_value"]').send_keys(ccv)
+        f.write("filled out payment info.\n")
 
         driver.switch_to_default_content()
         driver.find_element_by_id('continue_button').click()
+        f.write("clicked pay now button.\n")
 
 def main():
-    file = open('file.json')
+    file = open(sys.argv[1])
     elements = json.loads(file.read())
     url = (elements['url'])
-    size = (elements['size'])
     email = (elements['email'])
     firstName = (elements['firstName'])
     lastName = (elements['lastName'])
@@ -111,8 +114,9 @@ def main():
     cardExp = (elements['card expiry'])
     ccv = (elements['ccv'])
 
-    test = Scraper(url, size, email, firstName, lastName, address, city, zip, phone, cardNum, cardName, cardExp, ccv)
+    test = Scraper(url, email, firstName, lastName, address, city, zip, phone, cardNum, cardName, cardExp, ccv)
     test.scrape_init()
 
 if __name__ == "__main__":
- 	main()
+    sys.argv[:]
+    main()
