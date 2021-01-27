@@ -7,7 +7,7 @@ import sys
 class Scraper(object):
     global driver # webdriver crashes, changing to global seems to fix
     driver = webdriver.Chrome()
-    
+
     def __init__(self, url, email, firstName, lastName, address, city, zip, phone, cardNum, cardName, cardExp, ccv):
         self.url = url
         self.email = email
@@ -47,10 +47,11 @@ class Scraper(object):
 
         f = open("status.txt", "w+")
         driver.find_element_by_name('add').click()
-        f.write("added to size {} cart.\n".format(size))
+        product = driver.find_element_by_class_name('product-single__title').text
+        f.write("Added \'{}\' size {} to cart.\n".format(product, size))
         driver.implicitly_wait(60) # wait for cart button
         driver.find_element_by_name('checkout').click()
-        f.write("made it to contact page.\n")
+        f.write("Successfully retrieved contact information page.\n")
         driver.implicitly_wait(60) # wait 1 min in case of QUEUE
 
         emailInput = driver.find_element_by_id('checkout_email')
@@ -63,10 +64,11 @@ class Scraper(object):
         driver.find_element_by_id('checkout_shipping_address_zip').send_keys(zip)
         driver.find_element_by_id('checkout_shipping_address_phone').send_keys(phone)
         driver.find_element_by_name('button').click()
-        f.write("filled contact info.\n")
+        f.write("Successfully inputted all contact information.\n")
 
         #shipping button
         driver.find_element_by_name('button').click()
+        f.write("Successfully submitted shipping page.")
 
         driver.implicitly_wait(60)
         iframe = driver.find_element_by_class_name('card-fields-iframe') #cardNumber iframe
@@ -92,11 +94,11 @@ class Scraper(object):
         iframe4 = driver.find_element_by_xpath('//iframe[contains(@id, "card-fields-verification_value")]')
         driver.switch_to.frame(iframe4)
         driver.find_element_by_xpath('//input[@id="verification_value"]').send_keys(ccv)
-        f.write("filled out payment info.\n")
+        f.write("Successfully filled out payment information.\n")
 
         driver.switch_to_default_content()
         driver.find_element_by_id('continue_button').click()
-        f.write("clicked pay now button.\n")
+        f.write("Finalized checkout and submitted \'pay now\' button.\n")
 
 def main():
     file = open(sys.argv[1])
