@@ -68,7 +68,7 @@ class Scraper(object):
 
         #shipping button
         driver.find_element_by_name('button').click()
-        f.write("Successfully submitted shipping page.")
+        f.write("Successfully submitted shipping page.\n")
 
         driver.implicitly_wait(60)
         iframe = driver.find_element_by_class_name('card-fields-iframe') #cardNumber iframe
