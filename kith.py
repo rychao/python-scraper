@@ -1,5 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import json
 import string
 import sys
@@ -50,13 +53,11 @@ class Scraper(object):
         driver.find_element_by_name('add').click()
         product = driver.find_element_by_class_name('product-single__title').text
         f.write("{} | Added \'{}\' size {} to cart.\n".format(str(datetime.datetime.now()).split('.')[0], product, size))
-        driver.implicitly_wait(60) # wait for cart button
-        driver.find_element_by_name('checkout').click()
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.NAME, 'checkout'))).click() # wait for cart button
         f.write("{} | Successfully retrieved contact information page.\n".format(str(datetime.datetime.now()).split('.')[0]))
-        driver.implicitly_wait(60) # wait 1 min in case of QUEUE
 
-        emailInput = driver.find_element_by_id('checkout_email')
-        emailInput.send_keys(email)
+        WebDriverWait(driver, 300).until(EC.element_to_be_clickable((By.NAME, 'button'))) # wait 5 min in case of QUEUE
+        driver.find_element_by_id('checkout_email').send_keys(email)
         driver.find_element_by_id('checkout_buyer_accepts_marketing').click()
         driver.find_element_by_id('checkout_shipping_address_first_name').send_keys(firstName)
         driver.find_element_by_id('checkout_shipping_address_last_name').send_keys(lastName)
@@ -67,11 +68,11 @@ class Scraper(object):
         driver.find_element_by_name('button').click()
         f.write("{} | Successfully inputted all contact information.\n".format(str(datetime.datetime.now()).split('.')[0]))
 
-        #shipping button
+        # shipping button
         driver.find_element_by_name('button').click()
         f.write("{} | Successfully submitted shipping page.\n".format(str(datetime.datetime.now()).split('.')[0]))
 
-        driver.implicitly_wait(60)
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'continue_button')))
         iframe = driver.find_element_by_class_name('card-fields-iframe') #cardNumber iframe
         driver.switch_to.frame(iframe)
 
