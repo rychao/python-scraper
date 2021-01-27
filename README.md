@@ -39,3 +39,5 @@ This script (Python 3) uses Selenium with Google Chrome to automate carting and 
  ```
  python3 kith.py file.json XL
  ```
+
+ After running the function, kith.py will output a file "status.txt" in your local directory. The purpose of this file is to diagnose how far the script got through the checkout process in the case there are any errors.
