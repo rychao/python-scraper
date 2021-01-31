@@ -41,3 +41,13 @@ This script (Python 3) uses Selenium with Google Chrome to automate carting and 
  ```
 
  After running the function, kith.py will output a file "status.txt" in your local directory. The purpose of this file is to diagnose how far the script got through the checkout process in the case there are any errors.
+
+ ```
+ 2021-01-27 13:17:18 | Added 'KITH TREATS CHRONICLES BREAKFAST L/S TEE' size XS to cart.
+ 2021-01-27 13:17:21 | Successfully retrieved contact information page.
+ 2021-01-27 13:17:39 | Successfully inputted all contact information.
+ 2021-01-27 13:17:44 | Successfully submitted shipping page.
+ 2021-01-27 13:17:45 | Successfully filled out payment information.
+ 2021-01-27 13:17:45 | Finalized checkout and submitted 'pay now' button.
+
+```
