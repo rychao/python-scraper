@@ -56,7 +56,7 @@ class Scraper(object):
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.NAME, 'checkout'))).click() # wait for cart button
         f.write("{} | Successfully retrieved contact information page.\n".format(str(datetime.datetime.now()).split('.')[0]))
 
-        WebDriverWait(driver, 300).until(EC.element_to_be_clickable((By.NAME, 'button'))) # wait 5 min in case of QUEUE
+        WebDriverWait(driver, 900).until(EC.element_to_be_clickable((By.NAME, 'button'))) # wait 5 min in case of QUEUE
         driver.find_element_by_id('checkout_email').send_keys(email)
         driver.find_element_by_id('checkout_buyer_accepts_marketing').click()
         driver.find_element_by_id('checkout_shipping_address_first_name').send_keys(firstName)
