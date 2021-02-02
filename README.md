@@ -49,5 +49,4 @@ This script (Python 3) uses Selenium with Google Chrome to automate carting and 
  2021-01-27 13:17:44 | Successfully submitted shipping page.
  2021-01-27 13:17:45 | Successfully filled out payment information.
  2021-01-27 13:17:45 | Finalized checkout and submitted 'pay now' button.
-
 ```
