@@ -12,7 +12,7 @@ class Scraper(object):
     global driver # webdriver crashes, changing to global seems to fix
     driver = webdriver.Chrome()
 
-    def __init__(self, url, email, firstName, lastName, address, city, zip, phone, cardNum, cardName, cardExp, ccv):
+    def __init__(self, url, email, firstName, lastName, address, city, zip, phone, cardNum, cardName, cardExp):
         self.url = url
         self.email = email
         self.firstName = firstName
@@ -24,7 +24,6 @@ class Scraper(object):
         self.cardNum = cardNum
         self.cardName = cardName
         self.cardExp = cardExp
-        self.ccv = ccv
 
     def scrape_init(self):
         url = self.url
@@ -42,7 +41,7 @@ class Scraper(object):
         cardNum = self.cardNum.split()
         cardName = self.cardName
         cardExp = self.cardExp.split()
-        ccv = self.ccv
+        ccv = sys.argv[3]
 
         if '.5' in size:         # SHOE SIZES (Mens US 3-15, EU 36-46)
             driver.find_element_by_xpath('//div[@data-value="{}" and @class="swatch-element {}"]'.format(size, size.replace(".5", "-5"))).click()
@@ -116,9 +115,8 @@ def main():
     cardNum = (elements['card number'])
     cardName = (elements['card name'])
     cardExp = (elements['card expiry'])
-    ccv = (elements['ccv'])
 
-    test = Scraper(url, email, firstName, lastName, address, city, zip, phone, cardNum, cardName, cardExp, ccv)
+    test = Scraper(url, email, firstName, lastName, address, city, zip, phone, cardNum, cardName, cardExp)
     test.scrape_init()
 
 if __name__ == "__main__":
