@@ -27,7 +27,6 @@ This script (Python 3) uses Selenium with Google Chrome to automate carting and 
   "card number" : "4444 5555 6666 7777",
   "card name" : "John Smith",
   "card expiry" : "07 21",
-  "ccv" : "456"
  }
  ```
 
@@ -35,9 +34,11 @@ This script (Python 3) uses Selenium with Google Chrome to automate carting and 
 
  Once navigating to the proper directory, you will have to input the corresponding json file AND size (see example) as system arguments.
 
+ For security purposes, the ccv of your card is taken as a system argument (see example)
+
  EXAMPLE:
  ```
- python3 kith.py file.json XL
+ python3 kith.py file.json XL CCV
  ```
 
  After running the function, kith.py will output a file "status.txt" in your local directory. The purpose of this file is to diagnose how far the script got through the checkout process in the case there are any errors.
